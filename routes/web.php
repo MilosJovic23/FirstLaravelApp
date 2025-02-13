@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
     class Task
@@ -55,26 +55,36 @@ use Illuminate\Support\Facades\Route;
         ),
     ];
 
-    Route::get('/{id}', function (int $id) {
-        return "One single task";
+    Route::get('/', function ()  {
+        return redirect()->route('task.index');
+    });
+
+    Route::get('/tasks/{id}', function (int $id) use($tasks) {
+        $task = collect($tasks)->firstWhere('id', $id);
+        if (!$task) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        return view('show',['task' => $task]);
     })->name('task.show');
 
-    Route::get('/', function () use($tasks) {
+    Route::get('/tasks', function () use($tasks) {
         return view('index',[
             "tasks"=> $tasks,
         ]);
     })->name('task.index');
 
-    Route::get('/hello', function () {
-        return "hello";
-    })->name('hello');
 
-    Route::get('/hallo', function () {
-        return redirect()->route('hello');
-    });
-    Route::get('/greet/{name}', function ($name) {
-        return "Hello $name"."!";
-    });
+//    Route::get('/hello', function () {
+//        return "hello";
+//    })->name('hello');
+//
+//    Route::get('/hallo', function () {
+//        return redirect()->route('hello');
+//    });
+//    Route::get('/greet/{name}', function ($name) {
+//        return "Hello $name"."!";
+//    });
+
     Route::fallback(function () {
         return "Still got somewhere";
     });
