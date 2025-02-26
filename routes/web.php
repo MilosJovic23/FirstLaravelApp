@@ -59,17 +59,13 @@ use Illuminate\Support\Facades\Route;
         return redirect()->route('task.index');
     });
 
-    Route::get('/tasks/{id}', function (int $id) use($tasks) {
-        $task = collect($tasks)->firstWhere('id', $id);
-        if (!$task) {
-            abort(Response::HTTP_NOT_FOUND);
-        }
-        return view('show',['task' => $task]);
+    Route::get('/tasks/{id}', function ($id)  {
+        return view('show',['task' => \App\Models\Task::findOrFail($id)] );
     })->name('task.show');
 
-    Route::get('/tasks', function () use($tasks) {
+    Route::get('/tasks', function ()  {
         return view('index',[
-            "tasks"=> $tasks,
+            "tasks"=> \App\Models\Task::latest()->get(),
         ]);
     })->name('task.index');
 
