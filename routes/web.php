@@ -1,5 +1,7 @@
 <?php
-use Illuminate\Http\Request;
+
+    use App\Models\Task;
+    use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
     Route::get('/', function ()  {
@@ -8,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
     Route::get('/tasks', function ()  {
         return view('index',[
-            "tasks"=> \App\Models\Task::latest()->get(),
+            "tasks"=> Task::latest()->get(),
         ]);
     })
     ->name('task.index');
@@ -17,7 +19,7 @@ use Illuminate\Support\Facades\Route;
     ->name('task.create');
 
     Route::get('/tasks/{id}', function ($id)  {
-        return view('show',['task' => \App\Models\Task::findOrFail($id)] );
+        return view('show',['task' => Task::findOrFail($id)] );
     })
     ->name('task.show');
 
@@ -27,6 +29,13 @@ use Illuminate\Support\Facades\Route;
             'description' => 'required',
             'long_description' => 'required',
         ]));
+        $task = new Task;
+        $task->title = $data['title'];
+        $task->description = $data['description'];
+        $task->long_description = $data['long_description'];
+        $task->save();
+
+        return redirect()->route('task.show',['id'=>$task->id]);
     })
     ->name('task.store');
 
