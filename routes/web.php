@@ -18,6 +18,12 @@ use Illuminate\Support\Facades\Route;
     Route::view('/tasks/create' , 'create')
     ->name('task.create');
 
+
+    Route::get('/tasks/{id}/edit', function ($id)  {
+        return view('edit',['task' => Task::findOrFail($id)] );
+    })
+        ->name('task.edit');
+
     Route::get('/tasks/{id}', function ($id)  {
         return view('show',['task' => Task::findOrFail($id)] );
     })
