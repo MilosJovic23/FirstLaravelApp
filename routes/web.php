@@ -35,7 +35,8 @@ use Illuminate\Support\Facades\Route;
         $task->long_description = $data['long_description'];
         $task->save();
 
-        return redirect()->route('task.show',['id'=>$task->id]);
+        return redirect()->route('task.show',['id'=>$task->id])
+            ->with('success','Task created successfully');
     })
     ->name('task.store');
 
