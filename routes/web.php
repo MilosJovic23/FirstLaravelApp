@@ -33,12 +33,8 @@
     })->name('task.show');
 
     Route::post('/tasks', function (TaskRequset $request)  {
-        $data = $request->validated();
-        $task = new Task;
-        $task->title = $data['title'];
-        $task->description = $data['description'];
-        $task->long_description = $data['long_description'];
-        $task->save();
+
+        $task = Task::create($request->validated());
 
         return redirect()->route('task.show',['task'=>$task->id])
             ->with('success','Task created successfully');
@@ -47,17 +43,12 @@
 
     Route::put('/tasks/{task}', function (Task $task,TaskRequset $request)  {
 
-        $data = $request->validated();
-        $task->title = $data['title'];
-        $task->description = $data['description'];
-        $task->long_description = $data['long_description'];
-        $task->save();
+        $task->update($request->validated());
 
         return redirect()->route('task.show',['task'=>$task->id])
             ->with('success','Task updated successfully');
     })
         ->name('task.update');
-
 
     Route::fallback(function () {
         return "Still got somewhere";
