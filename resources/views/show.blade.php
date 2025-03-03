@@ -5,6 +5,9 @@
 
 @section('content')
 
+        <div>
+            <a href="{{ route('task.create') }}">Add task</a>
+        </div>
             <p>{{ $task->description }}</p>
             @if($task->long_description)
                 <p>{{$task->long_description}}</p>
@@ -12,4 +15,31 @@
             <p>{{ $task->created_at }}</p>
             <p>{{ $task->updated_at }}</p>
 
+        <p>
+            @if($task->completed)
+                Completed
+            @else
+            Not completed
+            @endif
+
+        </p>
+            <div>
+                <a href="{{ route('task.edit',['task'=>$task]) }}">Edit</a>
+            </div>
+
+        <div>
+            <form method="POST" action="{{ route('task.toggle-complete',['task'=>$task]) }}">
+                @csrf
+                @method('PUT')
+                <button type="submit">Mark as {{ $task->completed ? 'Not completed' : 'Completed' }}</button>
+            </form>
+        </div>
+
+        <div>
+            <form action="{{ route('task.destroy',['task'=>$task->id]) }}" method="POST">
+                @csrf
+                @method("DELETE")
+                <button type="submit">delete</button>
+            </form>
+        </div>
 @endsection
